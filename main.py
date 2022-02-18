@@ -207,7 +207,7 @@ class MainApp(Tk):
                        selectmode=SINGLE,
                        yscrollcommand=scrollbar.set)
 
-        button_back = Button(self,
+        button_main = Button(self,
                                 text="Главная",
                                 width=12,
                                 height=2,
@@ -274,14 +274,14 @@ class MainApp(Tk):
         self.add_destroyed(scrollbar)
         self.add_destroyed(button_one_del)
         self.add_destroyed(button_clear)
-        self.add_destroyed(button_back)
+        self.add_destroyed(button_main)
         self.add_destroyed(button_result)
 
 
         scrollbar.pack(side=RIGHT, fill=Y)
         scrollbar.config(command=lbox.yview)
         label_info.place(x=140, y=2)
-        button_back.place(x=100, y=524)
+        button_main.place(x=100, y=524)
         button_result.place(x=240, y=524)
         button_one_del.place(x=360, y=524)
         button_clear.place(x=490, y=524)
@@ -1218,6 +1218,9 @@ class MainApp(Tk):
                       height=10,
                       bg="#5FD2B5")
 
+        frame2 = Frame(self,
+                      height=10,
+                      bg="#5FD2B5")
 
 
         button_save_txt = Button(self,
@@ -1234,14 +1237,25 @@ class MainApp(Tk):
                                      height=2,
                                      command=self.save_result_button_history)
 
+        button_main = Button(self,
+                             text="Главная",
+                             width=30,
+                             font="Times 14",
+                             height=2,
+                             command=self.main_window)
+
 
         self.add_destroyed(button_save_txt)
         self.add_destroyed(button_save_history)
         self.add_destroyed(frame)
+        self.add_destroyed(frame2)
+        self.add_destroyed(button_main)
 
         button_save_txt.pack()
         frame.pack()
         button_save_history.pack()
+        frame2.pack()
+        button_main.pack()
 
     def add_destroyed(self, object):
         self.des.append(object)
@@ -1296,5 +1310,4 @@ class Info_result(Tk):
 
 if __name__ == '__main__':
     MainApp().mainloop()
-
 
