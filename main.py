@@ -1,4 +1,5 @@
 from tkinter import *
+import tkinter as tk
 from tkinter import filedialog as fd
 # from tkinter.ttk import Frame, Button, Style
 from tkinter import messagebox
@@ -13,7 +14,8 @@ import psycopg2
 all_tests_list = {1:"Опросник школьной тревожности Филлипса",
                   2:"Оценка уровня школьной мотивации",
                   3:"ТЕСТ «ДЕРЕВО»",
-                  4:"Методика для диагностики школьной тревожности"}
+                  4:"Методика для диагностики школьной тревожности",
+                  5:"Творческий потенциал ребенка"}
 
 
 
@@ -30,7 +32,7 @@ class MainApp(Tk):
         self.date_user = None
         self.test_name = None
         self.configure(bg="#5FD2B5")
-        self.title("main")  # устанавливаем заголовок main
+        self.title("Психологические тесты")  # устанавливаем заголовок main
         self.minsize(width=self.width, height=self.height)  # устанавливаем ширину и высоту
         self.up_menu()
         self.main_window()
@@ -126,7 +128,7 @@ class MainApp(Tk):
 
         lbox = Listbox(self,
                        width=80,
-                       height=16,
+                       height=28,
                        selectmode=SINGLE,
                        yscrollcommand=scrollbar.set)
 
@@ -141,7 +143,7 @@ class MainApp(Tk):
                           text="Открывает файл для ознакомления",
                           font="Times 11",
                           bg="#5FD2B5")
-            label.place(x=220, y=370)
+            label.place(x=220, y=570)
             dest.append(label)
 
         def off_event_button_seal(event):
@@ -164,7 +166,7 @@ class MainApp(Tk):
         scrollbar.config(command=lbox.yview)
 
         lbox.place(x=100, y=60)
-        button_seal.place(x=300, y=324)
+        button_seal.place(x=300, y=524)
 
     def all_histori(self):
         self.destroyed()  # уничтожаем элементы, которые были до этого
@@ -201,7 +203,7 @@ class MainApp(Tk):
 
         lbox = Listbox(self,
                        width=80,
-                       height=16,
+                       height=28,
                        selectmode=SINGLE,
                        yscrollcommand=scrollbar.set)
 
@@ -222,7 +224,7 @@ class MainApp(Tk):
                           text="Удаляет выделенный объект",
                           font="Times 11",
                           bg="#5FD2B5")
-            label.place(x=260, y=370)
+            label.place(x=340, y=570)
             dest.append(label)
 
         def off_event_button_one_del(event):
@@ -250,7 +252,7 @@ class MainApp(Tk):
                           text="Очищает всю базу данных",
                           font="Times 11",
                           bg="#5FD2B5")
-            label.place(x=450, y=370)
+            label.place(x=450, y=570)
             dest.append(label)
 
         def off_button_clear(event):
@@ -279,10 +281,10 @@ class MainApp(Tk):
         scrollbar.pack(side=RIGHT, fill=Y)
         scrollbar.config(command=lbox.yview)
         label_info.place(x=140, y=2)
-        button_back.place(x=100, y=324)
-        button_result.place(x=240, y=324)
-        button_one_del.place(x=360, y=324)
-        button_clear.place(x=490, y=324)
+        button_back.place(x=100, y=524)
+        button_result.place(x=240, y=524)
+        button_one_del.place(x=360, y=524)
+        button_clear.place(x=490, y=524)
         lbox.place(x=100, y=60)
 
     def new_window(self):
@@ -290,6 +292,10 @@ class MainApp(Tk):
 
     def check_user(self):
         self.destroyed()
+
+        frame_first = Frame(self,
+                            bg="#5FD2B5",
+                            height=250)
         frame_between_buttons = Frame(self,
                                       height=12,
                                       bg="#5FD2B5")
@@ -299,21 +305,23 @@ class MainApp(Tk):
                             text="Продолжить",
                             width=20,
                             height=1,
-                            font=12,
+                            font="12",
                             command=self.list_test
                             )
             button2 = Button(self,
                             text="Новый пользователь",
                             width=20,
                             height=1,
-                            font=12,
+                            font="12",
                             command=self.user_name_date
                             )
 
             self.add_destroyed(button1)
             self.add_destroyed(button2)
             self.add_destroyed(frame_between_buttons)
+            self.add_destroyed(frame_first)
 
+            frame_first.pack()
             button1.pack()
             frame_between_buttons.pack()
             button2.pack()
@@ -326,8 +334,11 @@ class MainApp(Tk):
         frame1 = Frame(self,
                        height=10,
                        bg="#5FD2B5")
-        frame2 = Frame(self,
+        frame11 = Frame(self,
                        height=10,
+                       bg="#5FD2B5")
+        frame2 = Frame(self,
+                       height=15,
                        bg="#5FD2B5")
 
         frame_between_text_and_buttons = Frame(self,
@@ -346,13 +357,17 @@ class MainApp(Tk):
                        bg="#5FD2B5",
                        font="16")
 
+        label3 = Label(self,
+                       text="Возраст от 7 до 13 лет:",
+                       foreground="#FFF",
+                       bg="#5FD2B5",
+                       font="16")
+
 
         button1 = Button(self,
                          text=all_tests_list[1],
                          height=int(self.height/300),
                          width=int(self.width/16),
-                         background="#8942D6",
-                         foreground="#FFA573",
                          padx="20",
                          pady="8",
                          font="16",
@@ -362,8 +377,6 @@ class MainApp(Tk):
                          text=all_tests_list[2],
                          height=int(self.height/300),
                          width=int(self.width/16),
-                         background="#689AD3",
-                         foreground="#CFF93E",
                          padx="20",
                          pady="8",
                          font="16",
@@ -373,8 +386,6 @@ class MainApp(Tk):
                          text=all_tests_list[3],
                          height=int(self.height/300),
                          width=int(self.width/16),
-                         background="#555",
-                         foreground="#ccc",
                          padx="20",
                          pady="8",
                          font="16",
@@ -384,12 +395,26 @@ class MainApp(Tk):
                          text=all_tests_list[4],
                          height=int(self.height / 300),
                          width=int(self.width / 16),
-                         background="#FF7640",
-                         foreground="#82217A",
                          padx="20",
                          pady="8",
                          font="16",
                          command=self.define4)
+
+        frame15 = Frame(self,
+                        height=10,
+                        bg="#5FD2B5")
+        frame5 = Frame(self,
+                       height=15,
+                       bg="#5FD2B5")
+
+        button5 = Button(self,
+                         text=all_tests_list[5],
+                         height=int(self.height / 300),
+                         width=int(self.width / 16),
+                         padx="20",
+                         pady="8",
+                         font="16",
+                         command=self.define5)
 
         self.add_destroyed(label1)
         self.add_destroyed(label2)
@@ -399,6 +424,11 @@ class MainApp(Tk):
         self.add_destroyed(button2)
         self.add_destroyed(button3)
         self.add_destroyed(button4)
+        self.add_destroyed(button5)
+        self.add_destroyed(frame11)
+        self.add_destroyed(frame15)
+        self.add_destroyed(frame5)
+        self.add_destroyed(label3)
 
 
         frame1.pack(fill=BOTH)
@@ -409,11 +439,17 @@ class MainApp(Tk):
         button3.pack()
         frame2.pack(fill=BOTH)
         label2.pack()
+        frame11.pack()
         button4.pack()
+        frame15.pack()
+        label3.pack()
+        frame5.pack()
+        button5.pack()
+
 
     def save_name(self):
         if self.message.get() == "" or self.message1.get() == "":
-            messagebox.showinfo("Внимание!", "Какое-то из полей осталось пустое")
+            messagebox.showinfo("Внимание!", "Пожалуйста, заполните пустое поле")
             self.user_name_date()
         else:
             self.name_user = self.message.get()
@@ -422,49 +458,66 @@ class MainApp(Tk):
 
     def user_name_date(self):
         self.destroyed()
-        label_name = Label(self,
-                      text="Введите имя:",
-                      font="12",
+        frame_first = Frame(self,
+                            bg="#5FD2B5",
+                            height=160)
+        frame = Frame(self,
                       bg="#5FD2B5")
+        label_name = Label(frame,
+                           text="Введите имя:",
+                           font="12",
+                           bg="#5FD2B5")
 
-        label_date = Label(self,
-                      text="Дата:",
-                      font="12",
-                      bg="#5FD2B5")
+        label_date = Label(frame,
+                           text="Дата:",
+                           font="12",
+                           bg="#5FD2B5")
 
         self.message = StringVar()
         self.message1 = StringVar()
-        enter_FIO = Entry(self,
+        enter_FIO = Entry(frame,
                           textvariable=self.message,
                           width=40)
 
-        enter_date = Entry(self,
+        enter_date = Entry(frame,
                            textvariable=self.message1,
                            width=40)
 
-        enter_date.insert(0, datetime.date.today())
+        enter_date.insert(0, datetime.date.today().strftime("%Y-%d-%m"))
 
         # Строку с датой делаем только для чтения
         enter_date['state'] = "readonly"
 
-        button = Button(self,
+        button = Button(frame,
                         text="Далее",
                         width=12,
                         height=1,
                         font=6,
                         command=self.save_name)
 
+        button_main = Button(frame,
+                             text="Главная",
+                             width=12,
+                             height=1,
+                             font=6,
+                             command=self.main_window)
+
+        self.add_destroyed(frame_first)
         self.add_destroyed(label_name)
         self.add_destroyed(label_date)
         self.add_destroyed(enter_FIO)
         self.add_destroyed(enter_date)
         self.add_destroyed(button)
+        self.add_destroyed(frame)
 
-        enter_FIO.place(x=160, y=22)
-        enter_date.place(x=160, y=52)
-        label_name.place(x=10, y=15)
-        label_date.place(x=10, y=45)
-        button.place(x=140, y=88)
+        frame_first.pack()
+        frame.pack()
+        enter_FIO.grid(row=2, column=3) #.place(x=160, y=22)
+        enter_date.grid(row=3, column=3) #.place(x=160, y=52)
+        label_name.grid(row=2, column=2) #.place(x=10, y=15)
+        label_date.grid(row=3, column=2) #.place(x=10, y=45)
+        button.grid(row=4, column=3, pady=10, sticky=tk.W) #.place(x=140, y=88)
+        button_main.grid(row=5, column=3, sticky=tk.W)
 
     def open_file(self, file_name):
         list_questions = []
@@ -486,11 +539,11 @@ class MainApp(Tk):
     def save_result_button_history(self):
         try:
             self.cursor.execute(f"""INSERT INTO save_result (name, date, name_test, info_result)
-                                Values('{self.name_user}', '{self.date_user}', '{self.test_name}', '{self.global_text}')""")
+                                Values('{self.name_user}', '{datetime.datetime.today()}', '{self.test_name}', '{self.global_text}')""")
         except:
             pass
 
-    def resize_image(self,size, img):
+    def resize_image(self, size, img):
         width = size
         image = Image.open(img)
         ratio = (width / float(image.size[0]))
@@ -565,68 +618,51 @@ class MainApp(Tk):
 
             else:
                 self.destroyed()
-                frame = Frame(self,
-                              width=10,
-                              bg="#5FD2B5")
-
                 label2 = Label(self,
                                text="Тест завершён",
                                font="16",
-                               height=10,
+                               height=2,
                                bg="#5FD2B5")
-
-                label2.pack(side=TOP)
-
-
                 self.add_destroyed(label2)
-                button_save_txt = Button(self,
-                                         text="Сохранить ответы в txt",
-                                         width=30,
-                                         command=self.save_result_button)
-
-                button_save_history = Button(self,
-                                             text="Сохранить ответы в историю",
-                                             width=30,
-                                             command=self.save_result_button_history)
-
-                self.add_destroyed(button_save_txt)
-                self.add_destroyed(button_save_history)
-                self.add_destroyed(frame)
-
-                button_save_txt.pack()
-                frame.pack()
-                button_save_history.pack()
+                label2.pack(side=TOP)
                 print_end()
+                self.end_test()
+
+        frame1 = Frame(self,
+                      height=140,
+                      bg="#5FD2B5")
+
+        frame = Frame(self,
+                      height=5,
+                      bg="#5FD2B5")
 
         var = IntVar()
         var.set(0)
-        No = Radiobutton(self,
+        No = Radiobutton(frame,
                          text="Нет",
                          variable=var,
                          font="11",
                          value=0,
                          bg="#5FD2B5")
 
-        Yes = Radiobutton(self,
+        Yes = Radiobutton(frame,
                           text="Да",
                           font="11",
                           variable=var,
                           value=1,
                           bg="#5FD2B5")
 
-        button = Button(self,
+        button = Button(frame,
                         text="Далее",
                         width=16,
                         height=1,
                         font=12,
                         command=change)
 
-        frame = Frame(self,
-                      height=5,
-                      bg="#5FD2B5")
 
 
-        label = Label(self,
+
+        label = Label(frame,
                       text=phillips_school[self.number_question],
                       font="14",
                       height=2,
@@ -638,12 +674,14 @@ class MainApp(Tk):
         self.add_destroyed(frame)
         self.add_destroyed(Yes)
         self.add_destroyed(No)
+        self.add_destroyed(frame1)
 
-        label.place(x=5, y=10)
-        Yes.place(x=20, y=60)
-        No.place(x=20, y=90)
+        frame1.pack()
         frame.pack()
-        button.place(x=380, y=140)
+        label.grid(row=0, column=1)
+        Yes.grid(row=1, column=1)
+        No.grid(row=2, column=1)
+        button.grid(row=3, column=1)
 
     def define2(self):
         self.test_name = all_tests_list[2]
@@ -681,7 +719,7 @@ class MainApp(Tk):
             for i in range(count_answer):
                 count += true_answer[i][answers[i]]
 
-            text += "Всего набрано балов: " + str(count) + "/30" + "\n" + "\n"
+            text += "Всего набрано баллов: " + str(count) + "/30" + "\n" + "\n"
             if count >= 25:
                 text += "высокий уровень школьной мотивации, учебной активности." + "\n" \
                     "Такие дети отличаются наличием высоких познавательных мотивов," + "\n" \
@@ -745,37 +783,15 @@ class MainApp(Tk):
 
             else:
                 self.destroyed()
-                frame = Frame(self,
-                              width=10,
-                              bg="#5FD2B5")
-
                 label2 = Label(self,
                                text="Тест завершён",
                                font="16",
-                               height=10,
+                               height=2,
                                bg="#5FD2B5")
-
-                label2.pack(side=TOP)
-
                 self.add_destroyed(label2)
-                button_save_txt = Button(self,
-                                         text="Сохранить ответы в txt",
-                                         width=30,
-                                         command=self.save_result_button)
-
-                button_save_history = Button(self,
-                                             text="Сохранить ответы в историю",
-                                             width=30,
-                                             command=self.save_result_button_history)
-
-                self.add_destroyed(button_save_txt)
-                self.add_destroyed(button_save_history)
-                self.add_destroyed(frame)
-
-                button_save_txt.pack()
-                frame.pack()
-                button_save_history.pack()
+                label2.pack(side=TOP)
                 print_end()
+                self.end_test()
 
         var = IntVar()
         var.set(0)
@@ -884,51 +900,31 @@ class MainApp(Tk):
             if self.number_question + 1 != count_answer:
                 if self.message.get() != "":
                     if not self.message.get().isdigit():
-                        messagebox.showinfo("Внимание!", "Нужно ввести номер человечка.")
+                        messagebox.showinfo("Внимание!", "Пожалуйста, введите номер человечка.")
                     else:
                         if (int(self.message.get()) not in [x for x in range(1, 21)]):
-                            messagebox.showinfo("Внимание!", "Такого номера человечка нет :(")
+                            messagebox.showinfo("Внимание!", "Упс, такого номера человечка нет :(")
                         else:
                             answers[self.number_question] = self.message.get()
                             self.number_question += 1
                             enter_date.delete(0, END)
                             label_text["text"] = """Введите в поле ниже номер того человечка, которым вы хотели\n бы быть и на чьем месте вы хотели бы находиться."""
                 else:
-                    messagebox.showinfo("Внимание!", "Какое-то из полей осталось пустое")
+                    messagebox.showinfo("Внимание!", "Пожалуйста, заполните пустое поле")
             else:
                 answers[self.number_question] = self.message.get()
                 self.destroyed()
-                frame = Frame(self,
-                              width=10,
-                              bg="#5FD2B5")
 
                 label2 = Label(self,
                                text="Тест завершён",
                                font="16",
-                               height=10,
+                               height=2,
                                bg="#5FD2B5")
+                self.add_destroyed(label2)
 
                 label2.pack(side=TOP)
-
-                self.add_destroyed(label2)
-                button_save_txt = Button(self,
-                                         text="Сохранить ответы в txt",
-                                         width=30,
-                                         command=self.save_result_button)
-
-                button_save_history = Button(self,
-                                             text="Сохранить ответы в историю",
-                                             width=30,
-                                             command=self.save_result_button_history)
-
-                self.add_destroyed(button_save_txt)
-                self.add_destroyed(button_save_history)
-                self.add_destroyed(frame)
-
-                button_save_txt.pack()
-                frame.pack()
-                button_save_history.pack()
                 print_end()
+                self.end_test()
 
         var = IntVar()
         var.set(0)
@@ -989,6 +985,7 @@ class MainApp(Tk):
         def print_end():
             count = 0
             text = ""
+
             label3 = Label(self,
                            text="",
                            font="16",
@@ -998,11 +995,11 @@ class MainApp(Tk):
             for i in range(count_answer - 2):
                 count += answers[i]
 
-            text += "Всего набрано балов: " + str(count) + "/10" + "\n" + "\n"
-            text += "Общий уровень тревожность вычисляется по" + "\n"
-            text += "«неблагополучным» ответам ребенка, характеризующим настроение" + "\n"
-            text += "персонажа рисунка как грустное, печальное, сердитое, скучное, испуганное." + "\n"
-            text += "Тревожным можно считать ребенка, давшего 7 и более подобных ответов из 10."
+            text += "Всего набрано баллов: " + str(count) + "/10" + "\n" + "\n"
+            text += "Общий уровень тревожности моэно вычислить по ответам," + "\n"
+            text += "характеризующим настроение персонажа рисунка как грустное, " + "\n"
+            text += "недовольное, печальное, сердитое, скучное, испуганное." + "\n"
+            text += "Тревожным можно считать человека, набравшего 7 и более подобных в данном тесте."
 
             label3["text"] = text
             self.global_text = text
@@ -1022,37 +1019,19 @@ class MainApp(Tk):
 
             else:
                 self.destroyed()
-                frame = Frame(self,
-                              width=10,
-                              bg="#5FD2B5")
 
                 label2 = Label(self,
                                text="Тест завершён",
                                font="16",
-                               height=10,
+                               height=2,
                                bg="#5FD2B5")
+                self.add_destroyed(label2)
 
                 label2.pack(side=TOP)
 
-                self.add_destroyed(label2)
-                button_save_txt = Button(self,
-                                         text="Сохранить ответы в txt",
-                                         width=30,
-                                         command=self.save_result_button)
-
-                button_save_history = Button(self,
-                                             text="Сохранить ответы в историю",
-                                             width=30,
-                                             command=self.save_result_button_history)
-
-                self.add_destroyed(button_save_txt)
-                self.add_destroyed(button_save_history)
-                self.add_destroyed(frame)
-
-                button_save_txt.pack()
-                frame.pack()
-                button_save_history.pack()
                 print_end()
+                self.end_test()
+
 
         var = IntVar()
         var.set(0)
@@ -1061,6 +1040,11 @@ class MainApp(Tk):
         label = Label(self,
                       image=img)
         label.image = img
+
+        label_text = Label(self,
+                           text="""Что выражает лицо ребёнка на рисунке?\nОпиши вслух, почему""",
+                           bg="#5FD2B5",
+                           font="Times 16")
 
         frame = Frame(self,
                       bg="#5FD2B5")
@@ -1091,12 +1075,173 @@ class MainApp(Tk):
         self.add_destroyed(number2)
         self.add_destroyed(button)
         self.add_destroyed(frame)
+        self.add_destroyed(label_text)
 
         label.pack()
+        label_text.pack()
         frame.pack()
         number1.grid(row=0, column=0, sticky=E, pady=20)
         number2.grid(row=0, column=2, sticky=W, pady=20)
         button.grid(row=1, column=1, pady=10)
+
+    def define5(self):
+        self.test_name = all_tests_list[5]
+        true_answer = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+        self.number_question = 0
+        self.destroyed() # уничтожаем элементы, которые были до этого
+
+        phillips_school = self.open_file("creative.txt")
+
+        count_answer = len(phillips_school)
+
+        def print_end():
+            count = 0
+            text = ""
+            label3 = Label(self,
+                           text="",
+                           font="16",
+                           height=10,
+                           bg="#5FD2B5")
+
+            for i in true_answer:
+                count += int(i)
+
+            text += "Всего набрано баллов: " + str(count) + "/23" + "\n" + "\n"
+            if count >= 23:
+                text += "Ребенок очень сообразителен, способен иметь собственную точку" + "\n"
+                text += "зрения на окружающее, и следует помогать ему в этом." + "\n"
+                text += "Все задатки творческой личности."
+            elif count >= 15:
+                text += "Ребенок не всегда обнаруживает свои способности, он находчив" + "\n"
+                text += "и сообразителен, лишь когда чем-нибудь заинтересован." + "\n"
+                text += "Помогайте ему добиваться успеха в интересующей его области."
+            elif count >= 9:
+                text += "Большая сообразительность, достаточная для многих областей знаний," + "\n"
+                text += "где не обязателен собственный взгляд на вещи." + "\n"
+                text += "Но для занятий творчеством многого не хватает."
+            elif count >= 4:
+                text += "Большая сообразительность, достаточная для многих областей знаний," + "\n"
+                text += "где не обязателен собственный взгляд на вещи." + "\n"
+                text += "Но для занятий творчеством многого не хватает."
+            elif count >= 0:
+                text += "Ребенку не хватает изобретательности, но он может достичь" + "\n"
+                text += "успеха как хороший исполнитель, даже в сложных профессиях."
+
+            label3["text"] = text
+            self.global_text = text
+
+            self.add_destroyed(label3)
+
+            label3.pack()
+
+        def change():
+            true_answer[self.number_question] = var.get()
+
+            if self.number_question + 1 != count_answer:
+                self.number_question += 1
+                if len(phillips_school[self.number_question]) <= 57:
+                    label["text"] = phillips_school[self.number_question]
+                else:
+                    text_r = phillips_school[self.number_question][:57] + "\n"
+                    text_r += phillips_school[self.number_question][57:]
+                    label["text"] = text_r
+
+            else:
+                self.destroyed()
+                label2 = Label(self,
+                               text="Тест завершён",
+                               font="16",
+                               height=2,
+                               bg="#5FD2B5")
+                self.add_destroyed(label2)
+                label2.pack(side=TOP)
+                print_end()
+                self.end_test()
+
+        frame1 = Frame(self,
+                       height=140,
+                       bg="#5FD2B5")
+
+        frame = Frame(self,
+                      height=5,
+                      bg="#5FD2B5")
+
+        var = IntVar()
+        var.set(0)
+        No = Radiobutton(frame,
+                         text="Нет",
+                         variable=var,
+                         font="11",
+                         value=0,
+                         bg="#5FD2B5")
+
+        Yes = Radiobutton(frame,
+                          text="Да",
+                          font="11",
+                          variable=var,
+                          value=1,
+                          bg="#5FD2B5")
+
+        button = Button(frame,
+                        text="Далее",
+                        width=16,
+                        height=1,
+                        font=12,
+                        command=change)
+
+
+
+
+        label = Label(frame,
+                      text=phillips_school[self.number_question][:34] + "\n" + phillips_school[self.number_question][34:],
+                      font="14",
+                      height=2,
+                      foreground="#FFF",
+                      bg="#5FD2B5")
+
+        self.add_destroyed(label)
+        self.add_destroyed(button)
+        self.add_destroyed(frame)
+        self.add_destroyed(Yes)
+        self.add_destroyed(No)
+        self.add_destroyed(frame1)
+
+        frame1.pack()
+        frame.pack()
+        label.grid(row=0, column=1)
+        Yes.grid(row=1, column=1)
+        No.grid(row=2, column=1)
+        button.grid(row=3, column=1)
+
+    def end_test(self):
+        frame = Frame(self,
+                      height=10,
+                      bg="#5FD2B5")
+
+
+
+        button_save_txt = Button(self,
+                                 text="Сохранить ответы в файл",
+                                 width=30,
+                                 height=2,
+                                 font="Times 14",
+                                 command=self.save_result_button)
+
+        button_save_history = Button(self,
+                                     text="Сохранить ответы в истории",
+                                     width=30,
+                                     font="Times 14",
+                                     height=2,
+                                     command=self.save_result_button_history)
+
+
+        self.add_destroyed(button_save_txt)
+        self.add_destroyed(button_save_history)
+        self.add_destroyed(frame)
+
+        button_save_txt.pack()
+        frame.pack()
+        button_save_history.pack()
 
     def add_destroyed(self, object):
         self.des.append(object)
