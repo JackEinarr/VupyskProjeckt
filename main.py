@@ -44,16 +44,50 @@ class MainApp(Tk):
         #               bg="#5FD2B5")
         # label_main.image = img
 
-        label1 = Label(self,
-                       text="Добрый день! Выберите тест для прохождения!",
+        frame = Frame(self,
+                      bg="#5FD2B5")
+
+        label1 = Label(frame,
+                       text="Добрый день! Для продолжения работы\n выберите нужный раздел",
                        font="Times 16",
                        bg="#5FD2B5")
 
+        button_go_test = Button(frame,
+                                text="Пройти тест",
+                                width=40,
+                                font="Times 14",
+                                height=2,
+                                command=self.check_user)
+
+        button_history = Button(frame,
+                                text="Открыть историю",
+                                width=40,
+                                font="Times 14",
+                                height=2,
+                                command=self.all_histori)
+
+        button_list_test = Button(frame,
+                                  text="Список тестов",
+                                  width=40,
+                                  font="Times 14",
+                                  height=2,
+                                  command=self.list_test_info)
+
         # self.add_destroyed(label_main)
         self.add_destroyed(label1)
+        self.add_destroyed(button_go_test)
+        self.add_destroyed(button_history)
+        self.add_destroyed(button_list_test)
+        self.add_destroyed(frame)
 
 
-        label1.place(x=140, y=20)
+
+        frame.pack()
+        label1.grid(row=0, column=2, pady=20)
+        button_go_test.grid(row=1, column=2, pady=10)
+        button_history.grid(row=2, column=2, pady=10)
+        button_list_test.grid(row=3, column=2, pady=10)
+
         # label_main.place(x=20, y=80)
 
     def up_menu(self):
@@ -150,10 +184,17 @@ class MainApp(Tk):
             except:
                 pass
 
+        def callback_result():
+            for i in reversed(lbox.curselection()):
+                self.cursor.execute(f"""SELECT info_result FROM save_result WHERE id = {lbox.get(i)[0]};""")
+
+            for row in self.cursor:
+                Info_result(row[0]).mainloop()
+
         scrollbar = Scrollbar(self)
 
         label_info = Label(self,
-                       text="Базаданных истории прохождения тестов",
+                       text="База данных истории прохождения тестов",
                        font="16",
                        height=2,
                        bg="#5FD2B5")
@@ -198,6 +239,12 @@ class MainApp(Tk):
                               height=2,
                               command=callback_all)
 
+        button_result = Button(self,
+                              text="Результат",
+                              width=12,
+                              height=2,
+                              command=callback_result)
+
         def on_button_clear(event):
             label = Label(self,
                           text="Очищает всю базу данных",
@@ -226,12 +273,15 @@ class MainApp(Tk):
         self.add_destroyed(button_one_del)
         self.add_destroyed(button_clear)
         self.add_destroyed(button_back)
+        self.add_destroyed(button_result)
+
 
         scrollbar.pack(side=RIGHT, fill=Y)
         scrollbar.config(command=lbox.yview)
         label_info.place(x=140, y=2)
         button_back.place(x=100, y=324)
-        button_one_del.place(x=300, y=324)
+        button_result.place(x=240, y=324)
+        button_one_del.place(x=360, y=324)
         button_clear.place(x=490, y=324)
         lbox.place(x=100, y=60)
 
@@ -378,7 +428,7 @@ class MainApp(Tk):
                       bg="#5FD2B5")
 
         label_date = Label(self,
-                      text="Введите дату:",
+                      text="Дата:",
                       font="12",
                       bg="#5FD2B5")
 
@@ -393,6 +443,10 @@ class MainApp(Tk):
                            width=40)
 
         enter_date.insert(0, datetime.date.today())
+
+        # Строку с датой делаем только для чтения
+        enter_date['state'] = "readonly"
+
         button = Button(self,
                         text="Далее",
                         width=12,
@@ -424,14 +478,15 @@ class MainApp(Tk):
             filetypes=(("TXT files", "*.txt"),
                        ("All files", "*.*")))
         try:
-            self.cursor.execute(f"""INSERT INTO save_result (name, date, name_test, info_result)
-                                Values('{self.name_user}', '{self.date_user}', '{self.test_name}', '{self.global_text}')""")
+            with open(file_name, "w", encoding="UTF-8") as f:
+                f.write(self.global_text)
         except:
             pass
 
+    def save_result_button_history(self):
         try:
-            with open(file_name, "w", encoding="UTF-8") as f:
-                f.write(self.global_text)
+            self.cursor.execute(f"""INSERT INTO save_result (name, date, name_test, info_result)
+                                Values('{self.name_user}', '{self.date_user}', '{self.test_name}', '{self.global_text}')""")
         except:
             pass
 
@@ -510,13 +565,37 @@ class MainApp(Tk):
 
             else:
                 self.destroyed()
-                label2 = Label(self, text="Тест завершён", font="16", height=10, bg="#5FD2B5")
+                frame = Frame(self,
+                              width=10,
+                              bg="#5FD2B5")
+
+                label2 = Label(self,
+                               text="Тест завершён",
+                               font="16",
+                               height=10,
+                               bg="#5FD2B5")
+
                 label2.pack(side=TOP)
+
+
                 self.add_destroyed(label2)
-                button_save = Button(self, text="Сохранить ответы",
-                                     command=self.save_result_button)
-                self.add_destroyed(button_save)
-                button_save.pack()
+                button_save_txt = Button(self,
+                                         text="Сохранить ответы в txt",
+                                         width=30,
+                                         command=self.save_result_button)
+
+                button_save_history = Button(self,
+                                             text="Сохранить ответы в историю",
+                                             width=30,
+                                             command=self.save_result_button_history)
+
+                self.add_destroyed(button_save_txt)
+                self.add_destroyed(button_save_history)
+                self.add_destroyed(frame)
+
+                button_save_txt.pack()
+                frame.pack()
+                button_save_history.pack()
                 print_end()
 
         var = IntVar()
@@ -541,7 +620,10 @@ class MainApp(Tk):
                         height=1,
                         font=12,
                         command=change)
-        frame = Frame(self, height=5, bg="#5FD2B5")
+
+        frame = Frame(self,
+                      height=5,
+                      bg="#5FD2B5")
 
 
         label = Label(self,
@@ -553,9 +635,7 @@ class MainApp(Tk):
 
         self.add_destroyed(label)
         self.add_destroyed(button)
-
         self.add_destroyed(frame)
-        self.add_destroyed(button)
         self.add_destroyed(Yes)
         self.add_destroyed(No)
 
@@ -665,13 +745,36 @@ class MainApp(Tk):
 
             else:
                 self.destroyed()
-                label2 = Label(self, text="Тест завершён", font="16", height=10, bg="#5FD2B5")
+                frame = Frame(self,
+                              width=10,
+                              bg="#5FD2B5")
+
+                label2 = Label(self,
+                               text="Тест завершён",
+                               font="16",
+                               height=10,
+                               bg="#5FD2B5")
+
                 label2.pack(side=TOP)
+
                 self.add_destroyed(label2)
-                button_save = Button(self, text="Сохранить ответы",
-                                     command=self.save_result_button)
-                self.add_destroyed(button_save)
-                button_save.pack()
+                button_save_txt = Button(self,
+                                         text="Сохранить ответы в txt",
+                                         width=30,
+                                         command=self.save_result_button)
+
+                button_save_history = Button(self,
+                                             text="Сохранить ответы в историю",
+                                             width=30,
+                                             command=self.save_result_button_history)
+
+                self.add_destroyed(button_save_txt)
+                self.add_destroyed(button_save_history)
+                self.add_destroyed(frame)
+
+                button_save_txt.pack()
+                frame.pack()
+                button_save_history.pack()
                 print_end()
 
         var = IntVar()
@@ -795,22 +898,36 @@ class MainApp(Tk):
             else:
                 answers[self.number_question] = self.message.get()
                 self.destroyed()
+                frame = Frame(self,
+                              width=10,
+                              bg="#5FD2B5")
+
                 label2 = Label(self,
                                text="Тест завершён",
                                font="16",
                                height=10,
                                bg="#5FD2B5")
 
-
-                button_save = Button(self,
-                                     text="Сохранить ответы",
-                                     command=self.save_result_button)
-
-                self.add_destroyed(button_save)
-                self.add_destroyed(label2)
-
                 label2.pack(side=TOP)
-                button_save.pack()
+
+                self.add_destroyed(label2)
+                button_save_txt = Button(self,
+                                         text="Сохранить ответы в txt",
+                                         width=30,
+                                         command=self.save_result_button)
+
+                button_save_history = Button(self,
+                                             text="Сохранить ответы в историю",
+                                             width=30,
+                                             command=self.save_result_button_history)
+
+                self.add_destroyed(button_save_txt)
+                self.add_destroyed(button_save_history)
+                self.add_destroyed(frame)
+
+                button_save_txt.pack()
+                frame.pack()
+                button_save_history.pack()
                 print_end()
 
         var = IntVar()
@@ -905,22 +1022,36 @@ class MainApp(Tk):
 
             else:
                 self.destroyed()
+                frame = Frame(self,
+                              width=10,
+                              bg="#5FD2B5")
+
                 label2 = Label(self,
                                text="Тест завершён",
                                font="16",
                                height=10,
                                bg="#5FD2B5")
 
-
-                button_save = Button(self,
-                                     text="Сохранить ответы",
-                                     command=self.save_result_button)
-
-                self.add_destroyed(button_save)
-                self.add_destroyed(label2)
-
                 label2.pack(side=TOP)
-                button_save.pack()
+
+                self.add_destroyed(label2)
+                button_save_txt = Button(self,
+                                         text="Сохранить ответы в txt",
+                                         width=30,
+                                         command=self.save_result_button)
+
+                button_save_history = Button(self,
+                                             text="Сохранить ответы в историю",
+                                             width=30,
+                                             command=self.save_result_button_history)
+
+                self.add_destroyed(button_save_txt)
+                self.add_destroyed(button_save_history)
+                self.add_destroyed(frame)
+
+                button_save_txt.pack()
+                frame.pack()
+                button_save_history.pack()
                 print_end()
 
         var = IntVar()
@@ -998,6 +1129,25 @@ class Window(Tk):
         label.pack()
         frame2.pack(fill=BOTH)
 
+class Info_result(Tk):
+    def __init__(self, text, *arg, **kwarg):
+        super().__init__(*arg, **kwarg)
+        self.width = 450
+        self.height = 450
+        self.minsize(width=self.width, height=self.height)  # устанавливаем ширину и высоту
+        self.title("Результат теста")  # устанавливаем заголовок main
+        label = Label(self,
+                      text=text)
+
+        frame1 = Frame(self,
+                       height=20)
+
+        frame2 = Frame(self,
+                       height=20)
+
+        frame1.pack(fill=BOTH)
+        label.pack()
+        frame2.pack(fill=BOTH)
 
 if __name__ == '__main__':
     MainApp().mainloop()
